@@ -89,7 +89,9 @@ describe("Mongomart", () => {
 
             assert.equal(actualDate.toDateString(), expectedDate.toDateString());
             assert.equal(actualDate.getUTCHours(), expectedDate.getUTCHours());
-            assert.equal(actualDate.getUTCMinutes(), expectedDate.getUTCMinutes());
+            if (!(actualDate.getUTCMinutes() == expectedDate.getUTCMinutes() || actualDate.getUTCMinutes() == expectedDate.getUTCMinutes()+1)) {
+                assert.ok(false);
+            }
         });
     });
 });
