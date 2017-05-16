@@ -38,13 +38,12 @@ describe('Mongomart', () =>
         let allComments = browser.getText('div.col-lg-12>div');
         let myCommet = allComments[allComments.length - 1];
         let name = myCommet.split(' ')[0];
-        let commentDateStr = myCommet.split('\n')[0];
         let text = myCommet.split('\n')[1];
-        let commentDate = moment.utc(commentDateStr, 'MMMM Do YYYY, h:mm:ss a');
+        let commentDate = moment.utc(myCommet.split('\n')[0], 'MMMM Do YYYY, h:mm:ss a');
 
         chai.expect(name).to.be.equal('Name');
         chai.expect(text).to.be.equal('Message');
-        let difference = currentDate.diff(commentDate);
+        let difference = currentDate - commentDate;
         chai.expect(difference).to.be.below(60*1000);
     });
 });
