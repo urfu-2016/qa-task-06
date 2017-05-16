@@ -30,9 +30,9 @@ describe('Mongomart', () =>
         browser
             .url('http://urfu-2016-testing.herokuapp.com/item/12/')
             .click('div.well input[type="text"]')
-            .keys('Test name')
+            .keys('Name')
             .click('div.well textarea')
-            .keys('Test message')
+            .keys('Message')
             .click('div.well button[type="submit"]');
 
         let allComments = browser.getText('div.col-lg-12>div');
@@ -42,8 +42,8 @@ describe('Mongomart', () =>
         let text = myCommet.split('\n')[1];
         let commentDate = moment.utc(commentDateStr, 'MMMM Do YYYY, h:mm:ss a');
 
-        chai.expect(name).to.be.equal('Test name');
-        chai.expect(text).to.be.equal('Test message');
+        chai.expect(name).to.be.equal('Name');
+        chai.expect(text).to.be.equal('Message');
         let difference = currentDate.diff(commentDate);
         chai.expect(difference).to.be.below(60*1000);
     });
