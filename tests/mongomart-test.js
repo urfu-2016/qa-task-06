@@ -29,7 +29,7 @@ describe('Mongomart', () =>
         let currentDate = moment();
         browser
             .url('http://urfu-2016-testing.herokuapp.com/item/12/')
-            .click('div.well namearea')
+            .click('div.well input[type="text"]')
             .keys('Test name')
             .click('div.well textarea')
             .keys('Test message')
