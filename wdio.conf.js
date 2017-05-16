@@ -8,8 +8,8 @@ exports.config = {
     // should work too though). These services define specific user and key (or access key)
     // values you need to put in here in order to connect to these services.
     //
-    user: process.env.SAUCE_USERNAME,
-    key: process.env.SAUCE_ACCESS_KEY,
+    user: 'Boter',
+    key: '0ece5032-23d2-4185-8a05-24441dc37540',
     
     
     //
