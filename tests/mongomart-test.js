@@ -7,7 +7,8 @@ describe('Mongomart', () =>
     {
         browser
             .url('http://urfu-2016-testing.herokuapp.com/')
-            .setValue("input[name='query']", "Pen")
+            .click('input[placeholder="Search"]')
+            .keys('Pen')
             .click('button[type="submit"]');
 
         chai.expect(browser.getUrl()).to.contain('/search?query=Pen');
@@ -29,21 +30,13 @@ describe('Mongomart', () =>
         let currentDate = moment();
         browser
             .url('http://urfu-2016-testing.herokuapp.com/item/12/')
-            .click('div.well input[type="text"]')
-            .keys('Name')
-            .click('div.well textarea')
-            .keys('Message')
             .click('div.well button[type="submit"]');
 
         let allComments = browser.getText('div.col-lg-12>div');
-        let myCommet = allComments[allComments.length - 1];
-        let name = myCommet.split(' ')[0];
-        let text = myCommet.split('\n')[1];
-        let commentDate = moment.utc(myCommet.split('\n')[0], 'MMMM Do YYYY, h:mm:ss a');
+        let myComment = allComments[allComments.length - 1];
+        let commentDate = moment.utc(myComment.split('\n')[0], 'MMMM Do YYYY, h:mm:ss a');
 
-        chai.expect(name).to.be.equal('Name');
-        chai.expect(text).to.be.equal('Message');
-        let difference = currentDate - commentDate;
-        chai.expect(difference).to.be.below(60*1000);
+        let difference = currentDate.diff(commentDate);
+        chai.expect(difference).to.be.below(600*1000);
     });
 });
