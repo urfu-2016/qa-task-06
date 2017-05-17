@@ -22,7 +22,12 @@ describe('Correctness of bread crumbs', () => {
     before(() => {
         browser
             .url('http://urfu-2016-testing.herokuapp.com/')
+            .click('a[href="/cart"]')
     })
+    it('Check for the display of bread crumbs in the basket', () => {
+        assert.equal(browser.getText('.breadcrumb li:nth-child(1) a'), 'Home');
+        assert.equal(browser.getText('.active'), 'Cart');
+    });
 
     it('Displaying bread crumbs on the product', () => {
         browser.url('http://urfu-2016-testing.herokuapp.com/item/19');
@@ -46,19 +51,21 @@ describe('Displaying the date and time in the recall', () => {
             .addValue('input[name="name"]', "Test")
             .click('div.well>form>button');
     });
+    var currentDate = new Date().getTime();
 
     it('should return the time in the correct format old comment', () => {
         const date = browser.getText('.media-heading small')[0];
 
         assert(moment(date, 'MMMM Do YYYY, h:m:s a').isValid());
-        assert.equal(date, 'March 22nd 2017, 3:58:15 pm');
     });
 
     it('should return the time in the correct format new comment', () => {
         const allcomments = browser.getText('.col-lg-12')[2].split('\n')
         const date = allcomments[allcomments.length-2];
+        reviewDate = moment.utc(date.substring(4), 'MMMM Do YYYY, h:m:s a');
+        reviewDate = new Date(reviewDate.toString()).getTime() ;
 
-        assert(moment(date.substring(4), 'MMMM Do YYYY, h:m:s a').isValid());
+        assert.ok(currentDate - reviewDate <= 60 * 1000);
         assert.equal(allcomments[allcomments.length-1], 'Good');
         assert.equal(allcomments[allcomments.length-2].substring(0,4), 'Test');
     });
