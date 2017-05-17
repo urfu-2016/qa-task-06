@@ -5,7 +5,7 @@ const assert = require ('assert');
 describe('Product search', () => {
     before(() => {
         browser
-            .url('http://urfu-2016-testing.herokuapp.com/')
+            .url('/')
             .setValue("input[name='query']", "Gray")
             .click('button[type="submit"]')
     });
@@ -21,7 +21,7 @@ describe('Product search', () => {
 describe('Correctness of bread crumbs', () => {
     before(() => {
         browser
-            .url('http://urfu-2016-testing.herokuapp.com/')
+            .url('/')
             .click('a[href="/cart"]')
     })
     it('Check for the display of bread crumbs in the basket', () => {
@@ -30,14 +30,14 @@ describe('Correctness of bread crumbs', () => {
     });
 
     it('Displaying bread crumbs on the product', () => {
-        browser.url('http://urfu-2016-testing.herokuapp.com/item/19');
+        browser.url('/item/19');
         assert.equal(browser.getText('.breadcrumb li:nth-child(1) a'), 'Home');
         assert.equal(browser.getText('.breadcrumb li:nth-child(2) a'), 'Books');
         assert.equal(browser.getText('.active'), 'MongoDB University Book');
     });
 
     it('Display of biscuits on the main page', () => {
-         browser.url('http://urfu-2016-testing.herokuapp.com/')
+         browser.url('/')
         assert.equal(browser.getText('.breadcrumb li:nth-child(1) a'), 'Home');
         assert.equal(browser.getText('.active')[0], 'All');
     });
@@ -46,7 +46,7 @@ describe('Correctness of bread crumbs', () => {
 describe('Displaying the date and time in the recall', () => {
     before(() => {
         browser
-            .url('http://urfu-2016-testing.herokuapp.com/item/21')
+            .url('/item/21')
             .addValue('textarea[name="review"]', "Good")
             .addValue('input[name="name"]', "Test")
             .click('div.well>form>button');
