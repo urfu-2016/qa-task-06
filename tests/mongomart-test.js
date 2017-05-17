@@ -1,5 +1,4 @@
 const assert = require('assert');
-const moment = require('moment');
 const URL = 'http://urfu-2016-testing.herokuapp.com/';
 
 describe('Search of products with not an empty result', () => {
