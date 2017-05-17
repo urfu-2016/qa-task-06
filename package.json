@@ -3,14 +3,22 @@
   "version": "0.0.1",
   "description": "Selenium",
   "scripts": {
-    "test": "wdio wdio.conf.js"
+    "config": "wdio config",
+    "test": "wdio wdio.conf.js",
+    "selenium:install": "selenium-standalone install",
+    "selenium:start": "selenium-standalone start"
   },
   "author": "Sergey Zhigalov <zhigalov@yandex-team.ru>",
   "license": "MIT",
   "devDependencies": {
-    "wdio-mocha-framework": "0.5.10",
-    "wdio-sauce-service": "0.4.0",
-    "wdio-spec-reporter": "0.1.0",
-    "webdriverio": "4.8.0"
+    "moment": "^2.18.1",
+    "selenium": "^2.20.0",
+    "selenium-standalone": "^6.4.1",
+    "selenium-webdriver": "^3.4.0",
+    "wdio": "^0.3.3",
+    "wdio-mocha-framework": "^0.5.10",
+    "wdio-sauce-service": "^0.4.0",
+    "wdio-spec-reporter": "^0.1.0",
+    "webdriverio": "^4.8.0"
   }
 }
