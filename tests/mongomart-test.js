@@ -1,9 +1,8 @@
 const assert = require('assert')
-const url = 'http://urfu-2016-testing.herokuapp.com/'
 
 describe('Search', () => {
   it('should show 1 products for searching "ball"', () => {
-    browser.url(url)
+    browser.url('/')
       .setValue('input[name=query]', 'ball')
       .click('.btn-default')
     const products = browser.elements('.img-responsive')
@@ -14,7 +13,7 @@ describe('Search', () => {
 
 describe('Breadcrumbs', () => {
   it('Should show "Home/Search/\"ball\"" bc after search', () => {
-    browser.url(url)
+    browser.url('/')
       .setValue('input[name=query]', 'ball')
       .click('.btn-default')
 
@@ -27,7 +26,7 @@ describe('Breadcrumbs', () => {
   })
 
   it('Should show on root page', () => {
-    browser.url(url)
+    browser.url('/')
 
     const bc = browser.getText('.breadcrumb li')
 
@@ -37,7 +36,7 @@ describe('Breadcrumbs', () => {
   })
 
   it('Should show on product show page', () => {
-    browser.url(url + 'item/1')
+    browser.url('/item/1')
 
     const bc = browser.getText('.breadcrumb li')
 
@@ -49,7 +48,7 @@ describe('Breadcrumbs', () => {
 
   it('Should show on category page', () => {
     const category = 'Apparel'
-    browser.url(url + `?category=${category}`)
+    browser.url(`/?category=${category}`)
 
     const bc = browser.getText('.breadcrumb li')
 
@@ -65,7 +64,7 @@ describe('Create Review', () => {
 
   before(() => {
     browser.timeouts
-    browser.url(url + 'item/4')
+    browser.url('/item/4')
       .setValue('.well .form-group textarea[name=review]', reviewBody)
       .setValue('.well .form-group input[name=name]', reviewAuthor)
       .click('.well .btn-primary')
