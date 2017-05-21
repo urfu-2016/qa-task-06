@@ -1,102 +1,127 @@
-const assert = require('assert');
+const expect = require('chai').expect;
 const moment = require('moment');
 
 describe('Mongomart', () => {
+    let selectors = {
+        firstCrumb: '.breadcrumb li:nth-child(1) a',
+        secondCrumb: '.breadcrumb li:nth-child(2)',
+        lastCrumb: '.breadcrumb li.active',
+        date: '.media-heading small'
+    };
+
     describe('Show one product `stress ball` by search', () => {
         before(() => {
             browser
-                .url('http://urfu-2016-testing.herokuapp.com/')
+                .url('/')
                 .setValue('input[name="query"]', 'stress ball')
                 .click('button[type="submit"]');
         });
 
-        it('should show one product with name `stress ball`', () => {
-            const element = browser.elements('div.row img.img-responsive');
+        it('should be one product', () => {
             const productsAmount = browser.getText('div.container div.row div.col-md-12 div i');
-            const productName = browser.getText('div.container div.row div.col-md-12 div.row div.col-md-5 h3 a');
 
-            assert.equal(element.value.length, 1);
-            assert.equal(productsAmount, '1 Products');
-            assert.equal(productName, 'Stress Ball');
+            expect(productsAmount).to.be.equal('1 Products');
         });
 
-        it('should breadcrumbs equals `Home/Search/"stress ball"`', () => {
-            const firstCrumb = browser.getText('.breadcrumb li:nth-child(1) a');
-            const secondCrumb = browser.getText('.breadcrumb li:nth-child(2)');
-            const lastCrumb = browser.getText('.breadcrumb li.active');
+        it('should show one product on the page', () => {
+            const element = browser.elements('div.row img.img-responsive');
 
-            assert.equal(firstCrumb, 'Home');
-            assert.equal(secondCrumb, 'Search');
-            assert.equal(lastCrumb, '"stress ball"');
+            expect(element.value).to.have.lengthOf(1);
         });
 
-        it('should description of product contain `stress ball`', () => {
+        it('should name or description of product contain `stress ball` (ignore case)', () => {
             const productDescription = browser.getText('div.container div.row div.col-md-12 div.row div.col-md-5 p');
-            
-            assert.notEqual(productDescription.match(/stress ball/), -1)
+            const productName = browser.getText('div.container div.row div.col-md-12 div.row div.col-md-5 h3 a');
+            const matches = [
+                productDescription.match(/stress ball/i),
+                productName.match(/stress ball/i)
+            ].filter(item => {
+                return item !== -1;
+            })
+
+            expect(matches).to.have.length.above(0);
         });
     });
 
-    describe('Show breadcrumbs `Home/Books/MongoDB The Definitive Guide`', () => {
+    describe('Breadcrumbs tests', () => {
+        const getHref = selector => {
+            return browser.elements(selector).value[0].getAttribute('href');
+        }
+
         before(() => {
-            browser
-                .url('http://urfu-2016-testing.herokuapp.com/?category=Books')
-                .click('div.container div:nth-child(2) div.col-md-10 div:nth-child(1) div.col-md-5 a');
+            browser.url('/')
         });
 
-        it('should show page with product `MongoDB The Definitive Guide`', () => {
-            const productName = browser.getText('div.container div.row div.row div.col-lg-12 h1.page-header');
+        it('should breadcrumbs equals `Home/Cart`', () => {
+            browser.url('/cart');
+            const homeHref = getHref(selectors.firstCrumb);
 
-            assert.notEqual(productName.match(/MongoDB The Definitive Guide/), -1);
+            expect(homeHref).to.be.equal(browser.options.baseUrl);
+            expect(browser.getText(selectors.firstCrumb)).to.be.equal('Home');
+            expect(browser.getText(selectors.lastCrumb)).to.be.equal('Cart');
+        });
+
+        it('should breadcrumbs equals `Home/All`', () => {
+            browser.url('/');
+            const homeHref = getHref(selectors.firstCrumb);
+
+            expect(homeHref).to.be.equal(browser.options.baseUrl);
+            expect(browser.getText(selectors.firstCrumb)).to.be.equal('Home');
+            expect(browser.getText(selectors.lastCrumb)).to.be.equal('All');
         });
 
         it('should breadcrumbs equals `Home/Books/MongoDB The Definitive Guide`', () => {
-            const firstCrumb = browser.getText('.breadcrumb li:nth-child(1) a');
-            const secondCrumb = browser.getText('.breadcrumb li:nth-child(2)');
-            const lastCrumb = browser.getText('.breadcrumb li.active');
+            browser.url('/item/11');
+            const homeHref = getHref(selectors.firstCrumb);
+            const booksHref = getHref(`${selectors.secondCrumb} a`);
 
-            assert.equal(firstCrumb, 'Home');
-            assert.equal(secondCrumb, 'Books');
-            assert.equal(lastCrumb, 'MongoDB The Definitive Guide');
+            expect(homeHref).to.be.equal(browser.options.baseUrl);
+            expect(booksHref).to.be.equal(`${browser.options.baseUrl}?category=Books`);
+            expect(browser.getText(selectors.firstCrumb)).to.be.equal('Home');
+            expect(browser.getText(selectors.secondCrumb)).to.be.equal('Books');
+            expect(browser.getText(selectors.lastCrumb)).to.be.equal('MongoDB The Definitive Guide');
+        });
+
+        it('should breadcrumbs equals `Home/Search/"stress ball"`', () => {
+            browser
+                .url('/')
+                .setValue('input[name="query"]', 'stress ball')
+                .click('button[type="submit"]');
+            const homeHref = getHref(selectors.firstCrumb);
+
+            expect(homeHref).to.be.equal(browser.options.baseUrl);
+            expect(browser.getText(selectors.firstCrumb)).to.be.equal('Home');
+            expect(browser.getText(selectors.secondCrumb)).to.be.equal('Search');
+            expect(browser.getText(selectors.lastCrumb)).to.be.equal('"stress ball"');
         });
     });
 
     describe('Show correct date/time format of review on product page', () => {
         let submitReviewDate;
+
         before(() => {
             browser
-                .url('http://urfu-2016-testing.herokuapp.com/item/11')
+                .url('/item/11')
                 .setValue('textarea[name="review"]', 'ReviewText')
                 .setValue('input[name="name"]', 'ReviewName')
                 .click('div.well form button[type="submit"]');
             submitReviewDate = new Date();
         });
 
+        it('should review date have correct date format', () => {
+            const dates = browser.elements(selectors.date);
+            const reviewDate = dates.value[dates.value.length - 1].getText();
+
+            expect(moment(reviewDate, 'MMMM Do YYYY, h:m:s a').isValid()).to.be.true;
+        });
+
         it('should review date be equals `submitReviewDate`', () => {
-            const dates = browser.elements('div > div > h4 > small');
+            const dates = browser.elements(selectors.date);
             let reviewDate = dates.value[dates.value.length - 1].getText();
             reviewDate = moment.utc(reviewDate, 'MMMM Do YYYY, h:m:s a');
             reviewDate = new Date(reviewDate.toString());
 
-            assert.ok(submitReviewDate.getTime() - reviewDate.getTime() <= 60 * 1000);
-        });
-
-        it('should review date have correct date format', () => {
-            const dates = browser.elements('div > div > h4 > small');
-            const reviewDate = dates.value[dates.value.length - 1].getText();
-
-            assert(moment(reviewDate, 'MMMM Do YYYY, h:m:s a').isValid());
-        });
-
-        it('should product page contain review', () => {
-            let names = browser.getText('.row > .row > div > div > div > h4');
-            names = names[names.length - 1].split(' ');
-            const reviewName = names.slice(0, names.length - 5).join(' ');
-            const comments = browser.getText('.row > .row > div > div > div');
-            const reviewText = comments[comments.length - 1].split('\n')[1];
-            
-            assert.equal(reviewName, 'ReviewName');
-            assert.equal(reviewText, 'ReviewText');
+            expect(submitReviewDate.getTime() - reviewDate.getTime() <= 60 * 1000).to.be.true;
         });
     });
 });

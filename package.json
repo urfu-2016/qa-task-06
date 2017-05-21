@@ -9,6 +9,7 @@
   "author": "Sergey Zhigalov <zhigalov@yandex-team.ru>",
   "license": "MIT",
   "devDependencies": {
+    "chai": "^3.5.0",
     "moment": "^2.18.1",
     "wdio-browserstack-service": "^0.1.4",
     "wdio-mocha-framework": "^0.5.10",
